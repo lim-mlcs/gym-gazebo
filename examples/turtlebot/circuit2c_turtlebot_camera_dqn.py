@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 '''
-Based on: 
+Based on:
+=======
 https://github.com/vmayoral/basic_reinforcement_learning
 https://gist.github.com/wingedsheep/4199594b02138dd427c22a540d6d6b8d
 '''
 import gym
+from gym import wrappers
 import gym_gazebo
 import time
 from distutils.dir_util import copy_tree
@@ -14,7 +16,7 @@ import json
 import random
 import numpy as np
 from keras.models import Sequential, load_model
-from keras.initializations import normal
+from keras.initializers import normal
 from keras import optimizers
 from keras.optimizers import RMSprop
 from keras.layers import Convolution2D, Flatten, ZeroPadding2D
@@ -25,6 +27,8 @@ from keras.layers.pooling import MaxPooling2D
 from keras.regularizers import l2
 from keras.optimizers import SGD , Adam
 import memory
+from keras import backend as K
+K.set_image_dim_ordering('th')
 
 class DeepQ:
     """
@@ -59,10 +63,10 @@ class DeepQ:
     def createModel(self):
         # Network structure must be directly changed here.
         model = Sequential()
-        model.add(Convolution2D(16, 3, 3, subsample=(2,2), input_shape=(img_channels,img_rows,img_cols)))
+        model.add(Convolution2D(16, (3,3), strides=(2,2), input_shape=(img_channels,img_rows,img_cols)))
         model.add(Activation('relu'))
         model.add(ZeroPadding2D((1, 1)))
-        model.add(Convolution2D(16, 3, 3, subsample=(2,2)))
+        model.add(Convolution2D(16, (3,3), strides=(2,2)))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
         model.add(Flatten())
@@ -119,7 +123,7 @@ class DeepQ:
         """
         if isFinal:
             return reward
-        else : 
+        else :
             return reward + self.discountFactor * self.getMaxQ(qValuesNewState)
 
     # select the action with the highest Q value
@@ -165,7 +169,7 @@ class DeepQ:
             return self.memory.getMemory(self.memory.getCurrentSize() - 1)
 
     def learnOnMiniBatch(self, miniBatchSize, useTargetNetwork=True):
-        # Do not learn until we've got self.learnStart samples        
+        # Do not learn until we've got self.learnStart samples
         if self.memory.getCurrentSize() > self.learnStart:
             # learn in batches of 128
             miniBatch = self.memory.getMiniBatch(miniBatchSize)
@@ -217,7 +221,7 @@ if __name__ == '__main__':
 
     continue_execution = False
     #fill this if continue_execution=True
-    weights_path = '/tmp/turtle_c2c_dqn_ep200.h5' 
+    weights_path = '/tmp/turtle_c2c_dqn_ep200.h5'
     monitor_path = '/tmp/turtle_c2c_dqn_ep200'
     params_json  = '/tmp/turtle_c2c_dqn_ep200.json'
 
@@ -320,8 +324,9 @@ if __name__ == '__main__':
                 else :
                     print ("EP "+str(epoch)+" - {} steps".format(t+1)+" - last100 C_Rewards : "+str(int((sum(last100Rewards)/len(last100Rewards))))+" - CReward: "+str(round(cumulated_reward, 2))+"  Eps="+str(round(explorationRate, 2))+"  Time: %d:%02d:%02d" % (h, m, s))
                     #SAVE SIMULATION DATA
-                    if (epoch)%100==0: 
-                        #save model weights and monitoring data every 100 epochs. 
+
+                    if (epoch)%100==0:
+                        #save model weights and monitoring data every 100 epochs.
                         deepQ.saveModel('/tmp/turtle_c2c_dqn_ep'+str(epoch)+'.h5')
                         env._flush()
                         copy_tree(outdir,'/tmp/turtle_c2c_dqn_ep'+str(epoch))

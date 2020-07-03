@@ -120,22 +120,43 @@ register(
     entry_point='gym_gazebo.envs.ARIAC:ARIACPickv0Env',
 )
 
-# MAIRA
+# MARA
 register(
-    id='MAIRASide3DOF-v0',
-    entry_point='gym_gazebo.envs.MAIRA:GazeboMAIRASide3DOFv0Env',
+    id='MARASide3DOF-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARASide3DOFv0Env',
 )
 register(
-    id='MAIRATop3DOF-v0',
-    entry_point='gym_gazebo.envs.MAIRA:GazeboMAIRATop3DOFv0Env',
-)
-
-register(
-    id='MAIRANoGripper-v0',
-    entry_point='gym_gazebo.envs.MAIRA:GazeboMAIRANoGripperv0Env',
+    id='MARATop3DOF-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATop3DOFv0Env',
 )
 
 register(
-    id='MAIRAOrient-v0',
-    entry_point='gym_gazebo.envs.MAIRA:GazeboMAIRATopOrientv0Env',
+    id='MARANoGripper-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARANoGripperv0Env',
+)
+
+register(
+    id='MARAOrient-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATopOrientv0Env',
+)
+
+register(
+    id='MARAVisionOrient-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATopOrientVisionv0Env',
+)
+register(
+    id='MARAOrientCollision-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATopOrientCollisionv0Env',
+)
+register(
+    id='MARACollision-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATopCollisionv0Env',
+)
+register(
+    id='MARAVisionOrientCollision-v0',
+    entry_point='gym_gazebo.envs.MARA:GazeboMARATopOrientVisionCollisionv0Env',
+)
+register(
+    id='RealMARA3DoF-v0',
+    entry_point='gym_gazebo.envs.MARA:RealModularMara3DOFv0Env',
 )
